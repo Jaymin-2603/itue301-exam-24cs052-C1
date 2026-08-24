@@ -151,15 +151,15 @@ function ClassesPage() {
                 const val = e.target.value;
                 setClassName(val);
                 
-                // Auto-select Trainer Type if the typed class name matches a known type
+                // Auto-select Trainer Type if the typed class name CONTAINS a known type keyword
                 const matchedType = uniqueTypes.find(
-                  (t) => t.toLowerCase() === val.toLowerCase()
+                  (t) => val.toLowerCase().includes(t.toLowerCase())
                 );
                 
                 if (matchedType) {
                   setSelectedType(matchedType);
-                } else if (selectedType && val.toLowerCase() !== selectedType.toLowerCase()) {
-                  // If they change the text completely, clear the selected type and trainer
+                } else {
+                  // If they completely remove the keyword, clear the selected type and trainer
                   setSelectedType("");
                   setSelectedTrainer("");
                 }
