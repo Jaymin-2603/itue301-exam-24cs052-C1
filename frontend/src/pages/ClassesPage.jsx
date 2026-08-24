@@ -126,7 +126,9 @@ function ClassesPage() {
             <select
               value={selectedType}
               onChange={(e) => {
-                setSelectedType(e.target.value);
+                const type = e.target.value;
+                setSelectedType(type);
+                setClassName(type); // Auto-fill class name
                 setSelectedTrainer(""); // reset trainer when type changes
               }}
               required
@@ -161,7 +163,23 @@ function ClassesPage() {
               type="text"
               placeholder="e.g., Yoga, Zumba, CrossFit"
               value={className}
-              onChange={(e) => setClassName(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setClassName(val);
+                
+                // Auto-select Trainer Type if the typed class name matches a known type
+                const matchedType = uniqueTypes.find(
+                  (t) => t.toLowerCase() === val.toLowerCase()
+                );
+                
+                if (matchedType) {
+                  setSelectedType(matchedType);
+                } else if (selectedType && val.toLowerCase() !== selectedType.toLowerCase()) {
+                  // If they change the text completely, clear the selected type and trainer
+                  setSelectedType("");
+                  setSelectedTrainer("");
+                }
+              }}
               required
             />
           </div>
