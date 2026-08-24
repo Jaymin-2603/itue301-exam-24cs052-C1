@@ -4,7 +4,7 @@
 
 const availabilityMap = {
   true: "Available",
-  false: "Fully Booked",
+  false: "Busy for next 3 days",
 };
 
 function TrainerCard({ name, specialization, available }) {
