@@ -23,7 +23,8 @@ router.post("/", async (req, res, next) => {
       return res.status(404).json({ message: "Trainer not found." });
     }
     if (!trainer.available) {
-      return res.status(400).json({ message: "Trainer is busy for the next 3 days. You may book after that." });
+      const days = trainer.busyDays || 3;
+      return res.status(400).json({ message: `Trainer is busy for the next ${days} days. You may book after that.` });
     }
 
     // memberId comes from the JWT token (set by authGuard as req.member.id)

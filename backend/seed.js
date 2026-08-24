@@ -28,11 +28,15 @@ async function seed() {
     for (let i = 0; i < 10; i++) {
       const fName = firstNames[Math.floor(Math.random() * firstNames.length)];
       const lName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      
+      const isAvailable = Math.random() > 0.3; // 70% available
+      const randomBusyDays = isAvailable ? 0 : Math.floor(Math.random() * 6) + 1; // 1 to 6 days
+
       generatedTrainers.push({
         name: `${fName} ${lName}`,
         specialization: spec,
-        // Make ~80% of trainers available
-        available: Math.random() > 0.2
+        available: isAvailable,
+        busyDays: randomBusyDays
       });
     }
   }

@@ -2,15 +2,10 @@
 // Reusable component that displays a single trainer's details.
 // Props: name (string), specialization (string), available (boolean)
 
-const availabilityMap = {
-  true: "Available",
-  false: "Busy for next 3 days",
-};
-
-function TrainerCard({ name, specialization, available }) {
-  // Pick CSS class based on availability
+function TrainerCard({ name, specialization, available, busyDays }) {
   const statusClass = available ? "status-available" : "status-booked";
-  const statusText = availabilityMap[available];
+  const days = busyDays || Math.floor(Math.random() * 5) + 1; // fallback if undefined
+  const statusText = available ? "Available" : `Busy for next ${days} days`;
 
   return (
     <div className="trainer-card">

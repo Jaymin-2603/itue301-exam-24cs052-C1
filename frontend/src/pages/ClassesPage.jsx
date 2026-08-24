@@ -136,7 +136,8 @@ function ClassesPage() {
                 if (trainerId) {
                   const t = trainers.find(tr => tr._id === trainerId);
                   if (t && !t.available) {
-                    setShowPopup(`${t.name} is currently busy for the next 3 days. You may book a class with them for a date after that.`);
+                    const days = t.busyDays || Math.floor(Math.random() * 5) + 1;
+                    setShowPopup(`${t.name} is currently busy for the next ${days} days. You may book a class with them for a date after that.`);
                   }
                 }
               }}
@@ -144,11 +145,14 @@ function ClassesPage() {
               disabled={!selectedType} // force user to pick a type first
             >
               <option value="">{selectedType ? "-- Select Trainer --" : "-- Select Type First --"}</option>
-              {availableTrainersForType.map((t) => (
-                <option key={t._id} value={t._id}>
-                  {t.name} {!t.available ? "(Busy for next 3 days)" : ""}
-                </option>
-              ))}
+              {availableTrainersForType.map((t) => {
+                const days = t.busyDays || Math.floor(Math.random() * 5) + 1;
+                return (
+                  <option key={t._id} value={t._id}>
+                    {t.name} {!t.available ? "" : ""}
+                  </option>
+                );
+              })}
             </select>
           </div>
 
@@ -231,13 +235,14 @@ function ClassesPage() {
         {!loading && !error && (
           <div className="trainer-grid">
             {filteredTrainers.length > 0 ? (
-              filteredTrainers.map((trainer) => (
+              filteredTrainers.map((t) => (
                 // Pass data from API response to TrainerCard via props (Task 1 & 4)
                 <TrainerCard
-                  key={trainer._id}
-                  name={trainer.name}
-                  specialization={trainer.specialization}
-                  available={trainer.available}
+                  key={t._id}
+                  name={t.name}
+                  specialization={t.specialization}
+                  available={t.available}
+                  busyDays={t.busyDays}
                 />
               ))
             ) : (

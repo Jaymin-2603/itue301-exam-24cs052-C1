@@ -17,6 +17,10 @@ const trainerSchema = new mongoose.Schema(
       type: Boolean,
       default: true, // trainers are available by default
     },
+    busyDays: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
