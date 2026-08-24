@@ -4,6 +4,7 @@
 const express = require("express");
 const router = express.Router();
 const ClassBooking = require("../models/ClassBooking");
+const Trainer = require("../models/Trainer");
 const authGuard = require("../middleware/authGuard");
 
 // Apply authGuard to ALL routes in this file
@@ -15,6 +16,15 @@ router.use(authGuard);
 router.post("/", async (req, res, next) => {
   try {
     const { trainerId, className, date, timeSlot } = req.body;
+
+    // Ensure the trainer exists and is available
+    const trainer = await Trainer.findById(trainerId);
+    if (!trainer) {
+      return res.status(404).json({ message: "Trainer not found." });
+    }
+    if (!trainer.available) {
+      return res.status(400).json({ message: "This trainer is fully booked." });
+    }
 
     // memberId comes from the JWT token (set by authGuard as req.member.id)
     const booking = new ClassBooking({

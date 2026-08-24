@@ -114,8 +114,8 @@ function ClassesPage() {
             >
               <option value="">-- Select Trainer --</option>
               {trainers.map((t) => (
-                <option key={t._id} value={t._id}>
-                  {t.name}
+                <option key={t._id} value={t._id} disabled={!t.available}>
+                  {t.name} {!t.available ? "(Fully Booked)" : ""}
                 </option>
               ))}
             </select>
