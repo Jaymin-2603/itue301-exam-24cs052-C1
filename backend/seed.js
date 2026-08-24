@@ -17,18 +17,27 @@ async function seed() {
   await Member.deleteMany();
   await Trainer.deleteMany();
 
-  // Create sample trainers with some overlapping specializations
-  const trainers = await Trainer.insertMany([
-    { name: "Raj Mehta", specialization: "Yoga", available: true },
-    { name: "Karan Desai", specialization: "Yoga", available: true },
-    { name: "Priya Shah", specialization: "Zumba", available: true },
-    { name: "Simran Kaur", specialization: "Zumba", available: false },
-    { name: "Arjun Patel", specialization: "CrossFit", available: false },
-    { name: "Kabir Singh", specialization: "CrossFit", available: true },
-    { name: "Neha Desai", specialization: "Pilates", available: true },
-    { name: "Vikram Singh", specialization: "Weightlifting", available: true },
-    { name: "David Lee", specialization: "Boxing", available: true },
-  ]);
+  // Generate 10 trainers for each specialization
+  const specializations = ["Yoga", "Zumba", "CrossFit", "Pilates", "Weightlifting", "Boxing"];
+  const firstNames = ["Aarav", "Priya", "Arjun", "Neha", "Vikram", "Sara", "Kabir", "Simran", "Rahul", "Anjali", "Rohan", "Kriti", "Amit", "Pooja", "Vishal", "Sneha", "Raj", "Kavya", "Siddharth", "Tara"];
+  const lastNames = ["Sharma", "Patel", "Singh", "Desai", "Mehta", "Shah", "Kumar", "Verma", "Reddy", "Gupta", "Chauhan", "Joshi"];
+  
+  const generatedTrainers = [];
+  
+  for (const spec of specializations) {
+    for (let i = 0; i < 10; i++) {
+      const fName = firstNames[Math.floor(Math.random() * firstNames.length)];
+      const lName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      generatedTrainers.push({
+        name: `${fName} ${lName}`,
+        specialization: spec,
+        // Make ~80% of trainers available
+        available: Math.random() > 0.2
+      });
+    }
+  }
+
+  const trainers = await Trainer.insertMany(generatedTrainers);
 
   // Create test members with hashed password
   const hashedPassword = await bcrypt.hash("password123", 10);
@@ -59,8 +68,8 @@ async function seed() {
     }
   ]);
 
-  console.log("✅ Seeded trainers:", trainers.map(t => t.name).join(", "));
-  console.log("✅ Seeded members:", members.map(m => m.email).join(", "));
+  console.log(`✅ Seeded ${trainers.length} trainers across ${specializations.length} specializations`);
+  console.log(`✅ Seeded members: ${members.map((m) => m.email).join(", ")}`);
   console.log("\nTest Login Credentials (for all users):");
   console.log("  Password: password123");
   console.log("  Users: test@fitzone.com | alice@fitzone.com | admin@fitzone.com");

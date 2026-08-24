@@ -102,22 +102,6 @@ function ClassesPage() {
       {/* ── Booking Form (Task 2) ── */}
       <section className="section glass-panel">
         <h2>Book a Class</h2>
-        {/* Live display of selected state values (Task 2 requirement) */}
-        {selectedType && (
-          <p className="state-display">
-            Trainer Type Needed: <strong>{selectedType}</strong>
-          </p>
-        )}
-        {selectedTrainer && (
-          <p className="state-display">
-            Selected Trainer ID: <strong>{selectedTrainer}</strong>
-          </p>
-        )}
-        {selectedTimeSlot && (
-          <p className="state-display">
-            Selected Time Slot: <strong>{selectedTimeSlot}</strong>
-          </p>
-        )}
 
         <form onSubmit={handleBooking} className="booking-form">
           
