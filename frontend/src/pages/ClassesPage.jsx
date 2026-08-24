@@ -26,6 +26,7 @@ function ClassesPage() {
   const [className, setClassName] = useState("");
   const [date, setDate] = useState("");
   const [bookingMsg, setBookingMsg] = useState("");
+  const [showPopup, setShowPopup] = useState(null); // Stores the popup message
 
   // Extract unique specializations for the "Trainer Type Needed" dropdown
   const uniqueTypes = [...new Set(trainers.map(t => t.specialization))];
@@ -128,13 +129,23 @@ function ClassesPage() {
             <label>Trainer</label>
             <select
               value={selectedTrainer}
-              onChange={(e) => setSelectedTrainer(e.target.value)}
+              onChange={(e) => {
+                const trainerId = e.target.value;
+                setSelectedTrainer(trainerId);
+                
+                if (trainerId) {
+                  const t = trainers.find(tr => tr._id === trainerId);
+                  if (t && !t.available) {
+                    setShowPopup(`${t.name} is currently busy for the next 3 days. You may book a class with them for a date after that.`);
+                  }
+                }
+              }}
               required
               disabled={!selectedType} // force user to pick a type first
             >
               <option value="">{selectedType ? "-- Select Trainer --" : "-- Select Type First --"}</option>
               {availableTrainersForType.map((t) => (
-                <option key={t._id} value={t._id} disabled={!t.available}>
+                <option key={t._id} value={t._id}>
                   {t.name} {!t.available ? "(Busy for next 3 days)" : ""}
                 </option>
               ))}
@@ -235,6 +246,17 @@ function ClassesPage() {
           </div>
         )}
       </section>
+
+      {/* ── Popup Modal ── */}
+      {showPopup && (
+        <div className="modal-overlay" onClick={() => setShowPopup(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Trainer Unavailable</h3>
+            <p>{showPopup}</p>
+            <button onClick={() => setShowPopup(null)}>Got it</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
