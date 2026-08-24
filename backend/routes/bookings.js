@@ -24,7 +24,21 @@ router.post("/", async (req, res, next) => {
     }
     if (!trainer.available) {
       const days = trainer.busyDays || 3;
-      return res.status(400).json({ message: `Trainer is busy for the next ${days} days. You may book after that.` });
+      const today = new Date();
+      const availableDate = new Date(today);
+      availableDate.setDate(today.getDate() + days);
+      
+      const bookingDate = new Date(date);
+      
+      // Reset hours to compare purely by calendar day
+      availableDate.setHours(0, 0, 0, 0);
+      bookingDate.setHours(0, 0, 0, 0);
+
+      if (bookingDate <= availableDate) {
+        return res.status(400).json({ 
+          message: `Trainer is busy for the next ${days} days. You may book for a date after ${availableDate.toLocaleDateString()}.` 
+        });
+      }
     }
 
     // memberId comes from the JWT token (set by authGuard as req.member.id)
