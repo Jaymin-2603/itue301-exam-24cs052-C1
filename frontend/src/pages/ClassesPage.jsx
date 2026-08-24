@@ -20,11 +20,20 @@ function ClassesPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   // ─── Booking form states (Task 2) ────────────────────────────────
-  const [selectedTrainer, setSelectedTrainer] = useState("");  // state 1
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedTrainer, setSelectedTrainer] = useState("");
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(""); // state 2
   const [className, setClassName] = useState("");
   const [date, setDate] = useState("");
   const [bookingMsg, setBookingMsg] = useState("");
+
+  // Extract unique specializations for the "Trainer Type Needed" dropdown
+  const uniqueTypes = [...new Set(trainers.map(t => t.specialization))];
+  
+  // Filter trainers for the dropdown based on selected type
+  const availableTrainersForType = selectedType 
+    ? trainers.filter(t => t.specialization === selectedType)
+    : trainers;
 
   // Fetch trainers when the component first mounts (Task 4)
   useEffect(() => {
@@ -75,6 +84,7 @@ function ClassesPage() {
       } else {
         setBookingMsg("✅ Booking confirmed!");
         // Reset form
+        setSelectedType("");
         setSelectedTrainer("");
         setSelectedTimeSlot("");
         setClassName("");
@@ -90,9 +100,14 @@ function ClassesPage() {
       <h1>🏃 Classes</h1>
 
       {/* ── Booking Form (Task 2) ── */}
-      <section className="section">
+      <section className="section glass-panel">
         <h2>Book a Class</h2>
         {/* Live display of selected state values (Task 2 requirement) */}
+        {selectedType && (
+          <p className="state-display">
+            Trainer Type Needed: <strong>{selectedType}</strong>
+          </p>
+        )}
         {selectedTrainer && (
           <p className="state-display">
             Selected Trainer ID: <strong>{selectedTrainer}</strong>
@@ -105,15 +120,34 @@ function ClassesPage() {
         )}
 
         <form onSubmit={handleBooking} className="booking-form">
+          
+          <div className="form-group">
+            <label>Trainer Type Needed</label>
+            <select
+              value={selectedType}
+              onChange={(e) => {
+                setSelectedType(e.target.value);
+                setSelectedTrainer(""); // reset trainer when type changes
+              }}
+              required
+            >
+              <option value="">-- Select Type --</option>
+              {uniqueTypes.map((type, idx) => (
+                <option key={idx} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+
           <div className="form-group">
             <label>Trainer</label>
             <select
               value={selectedTrainer}
               onChange={(e) => setSelectedTrainer(e.target.value)}
               required
+              disabled={!selectedType} // force user to pick a type first
             >
-              <option value="">-- Select Trainer --</option>
-              {trainers.map((t) => (
+              <option value="">{selectedType ? "-- Select Trainer --" : "-- Select Type First --"}</option>
+              {availableTrainersForType.map((t) => (
                 <option key={t._id} value={t._id} disabled={!t.available}>
                   {t.name} {!t.available ? "(Busy for next 3 days)" : ""}
                 </option>

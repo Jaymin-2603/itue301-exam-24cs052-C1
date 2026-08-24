@@ -17,16 +17,17 @@ async function seed() {
   await Member.deleteMany();
   await Trainer.deleteMany();
 
-  // Create sample trainers
+  // Create sample trainers with some overlapping specializations
   const trainers = await Trainer.insertMany([
-    { name: "Raj Mehta", specialization: "Yoga & Meditation", available: true },
-    { name: "Priya Shah", specialization: "Zumba & Dance", available: true },
-    { name: "Arjun Patel", specialization: "CrossFit & Strength", available: false },
-    { name: "Neha Desai", specialization: "Pilates & Flexibility", available: true },
-    { name: "Vikram Singh", specialization: "Weightlifting & Bodybuilding", available: true },
-    { name: "Sara Khan", specialization: "Aerobics & Cardio", available: true },
-    { name: "David Lee", specialization: "Boxing & Martial Arts", available: false },
-    { name: "Emma Watson", specialization: "Spinning & Cycling", available: true },
+    { name: "Raj Mehta", specialization: "Yoga", available: true },
+    { name: "Karan Desai", specialization: "Yoga", available: true },
+    { name: "Priya Shah", specialization: "Zumba", available: true },
+    { name: "Simran Kaur", specialization: "Zumba", available: false },
+    { name: "Arjun Patel", specialization: "CrossFit", available: false },
+    { name: "Kabir Singh", specialization: "CrossFit", available: true },
+    { name: "Neha Desai", specialization: "Pilates", available: true },
+    { name: "Vikram Singh", specialization: "Weightlifting", available: true },
+    { name: "David Lee", specialization: "Boxing", available: true },
   ]);
 
   // Create test members with hashed password
