@@ -37,6 +37,11 @@ router.post("/", async (req, res, next) => {
 
     // Mongoose will throw ValidationError if required fields are missing
     const saved = await booking.save();
+
+    // Change trainer status to false (fully booked) so they can't be double booked
+    trainer.available = false;
+    await trainer.save();
+
     res.status(201).json(saved); // 201 Created
   } catch (err) {
     // Handle Mongoose ValidationError — return clean messages

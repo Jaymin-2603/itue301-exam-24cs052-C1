@@ -23,24 +23,46 @@ async function seed() {
     { name: "Priya Shah", specialization: "Zumba & Dance", available: true },
     { name: "Arjun Patel", specialization: "CrossFit & Strength", available: false },
     { name: "Neha Desai", specialization: "Pilates & Flexibility", available: true },
+    { name: "Vikram Singh", specialization: "Weightlifting & Bodybuilding", available: true },
+    { name: "Sara Khan", specialization: "Aerobics & Cardio", available: true },
+    { name: "David Lee", specialization: "Boxing & Martial Arts", available: false },
+    { name: "Emma Watson", specialization: "Spinning & Cycling", available: true },
   ]);
 
-  // Create a test member with hashed password
+  // Create test members with hashed password
   const hashedPassword = await bcrypt.hash("password123", 10);
-  const member = await Member.create({
-    name: "Jaymin Test",
-    email: "test@fitzone.com",
-    phone: "9876543210",
-    membershipType: "premium",
-    password: hashedPassword,
-    role: "member",
-  });
+  const members = await Member.insertMany([
+    {
+      name: "Jaymin (Test User)",
+      email: "test@fitzone.com",
+      phone: "9876543210",
+      membershipType: "premium",
+      password: hashedPassword,
+      role: "member",
+    },
+    {
+      name: "Alice Johnson",
+      email: "alice@fitzone.com",
+      phone: "9876543211",
+      membershipType: "basic",
+      password: hashedPassword,
+      role: "member",
+    },
+    {
+      name: "Admin Superuser",
+      email: "admin@fitzone.com",
+      phone: "9876543212",
+      membershipType: "platinum",
+      password: hashedPassword,
+      role: "admin",
+    }
+  ]);
 
-  console.log("✅ Seeded trainers:", trainers.map(t => t.name));
-  console.log("✅ Seeded member:", member.email);
-  console.log("\nTest Login Credentials:");
-  console.log("  Email:    test@fitzone.com");
+  console.log("✅ Seeded trainers:", trainers.map(t => t.name).join(", "));
+  console.log("✅ Seeded members:", members.map(m => m.email).join(", "));
+  console.log("\nTest Login Credentials (for all users):");
   console.log("  Password: password123");
+  console.log("  Users: test@fitzone.com | alice@fitzone.com | admin@fitzone.com");
 
   mongoose.disconnect();
 }
